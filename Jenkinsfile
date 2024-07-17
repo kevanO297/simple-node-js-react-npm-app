@@ -1,5 +1,8 @@
 pipeline {
-    agent any
+    agent { docker { image 'node:latest' } } 
+    environment { 
+        HOME = '.' 
+    }
 
     environment {
         CI = 'true'
