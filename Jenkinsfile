@@ -1,32 +1,21 @@
 pipeline {
-    agent { docker { image 'node:latest' } } 
-    environment { 
-        HOME = '.' 
-        CI = 'true'
-    }
-
+    agent any
     stages {
         stage('Build') {
             steps {
                 sh 'npm install'
             }
         }
-
         stage('Test') {
             steps {
                 sh './jenkins/scripts/test.sh'
             }
-
-            post {
-                always {
-                    junit 'jenkins/reports/*.xml'
-                }
-            }
         }
-
-        stage('Deliver') {
+        stage('Deliver') { 
             steps {
-                sh './jenkins/scripts/deliver.sh'
+                sh './jenkins/scripts/deliver.sh' 
+                input message: 'Finished using the web site? (Click "Proceed" to continue)' 
+                sh './jenkins/scripts/kill.sh' 
             }
         }
     }
